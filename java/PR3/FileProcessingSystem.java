@@ -3,7 +3,8 @@ package PR3;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
-import java.util.concurrent.atomic.AtomicInteger;
+
+//Zverev
 // Класс File представляет файлы с типом и размером
 class File {
     private final String fileType;
@@ -19,9 +20,9 @@ class File {
         return fileSize;
     }
 }
+//Zverev
 // Генератор файлов
 class FileGenerator {
-    private static final AtomicInteger counter = new AtomicInteger(0);
     // Генерирует файлы асинхронно с задержкой
     public Observable<File> generateFile() {
         return Observable
@@ -41,6 +42,7 @@ class FileGenerator {
                 .observeOn(Schedulers.io()); // Результаты наблюдаются в фоновом потоке
     }
 }
+//Zverev
 // Очередь файлов
 class FileQueue {
     private final int capacity;
@@ -49,14 +51,15 @@ class FileQueue {
     public FileQueue(int capacity) {
         this.capacity = capacity;
         this.fileObservable = new FileGenerator().generateFile()
-                .replay(capacity) // Буферизирует источник файлов с ограниченной емкостью
-                .autoConnect(); // Подключается автоматически к буферизированному источнику
+                .replay(capacity) // При подключении обработчика выдает набор последних файлов
+                .autoConnect(); // Включается автоматически при подписке обработчика
     }
     // Получает наблюдаемый поток файлов
     public Observable<File> getFileObservable() {
         return fileObservable;
     }
 }
+//Zverev
 // Обработчик файлов
 class FileProcessor {
     private final String supportedFileType;
@@ -68,7 +71,7 @@ class FileProcessor {
     public Completable processFiles(Observable<File> fileObservable) {
         return fileObservable
                 .filter(file -> file.getFileType().equals(supportedFileType)) // Фильтрует файлы по типу
-                    .flatMapCompletable(file -> {
+                    .flatMapCompletable(file -> { // Преобразует в Completable
             long processingTime = file.getFileSize() * 7; // Вычисляет время обработки
             return Completable
                     .fromAction(() -> {
@@ -80,21 +83,23 @@ class FileProcessor {
                 }).onErrorComplete(); // Игнорирует ошибки и завершает успешно
     }
 }
+//Zverev
 // Основной класс системы обработки файлов
 public class FileProcessingSystem {
     public static void main(String[] args) {
+        System.out.println("Автор: " + "Зверев А.А. ИКБО-20-21");
         int queueCapacity = 5;
         FileQueue fileQueue = new FileQueue(queueCapacity);
         String[] supportedFileTypes = {"XML", "JSON", "XLS"};
         for (String fileType : supportedFileTypes) {
             new FileProcessor(fileType)
-                    .processFiles(fileQueue.getFileObservable())
-                    .subscribe(() -> {}, // Обработка успешного завершения
-                            throwable -> System.err.println("Error processing file: " + throwable));
+                    .processFiles(fileQueue.getFileObservable()) // Подключаем обработчик
+                    .subscribe(() -> {}, // Обработка успешного завершения (OnNext)
+                            throwable -> System.err.println("Error processing file: " + throwable)); //OnError
         }
-        // Даем системе время для работы (можно изменить)
+        // Даем системе время для работы
         try {
-            Thread.sleep(10000); // Пусть система работает 10 секунд
+            Thread.sleep(10000); // Работает 10 секунд
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
