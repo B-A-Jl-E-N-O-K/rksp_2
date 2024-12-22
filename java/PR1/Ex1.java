@@ -143,6 +143,10 @@ public class Ex1 {
             int result = findSum(testList);
             long endTime = System.nanoTime();
             long durationInMilliseconds = (endTime - startTime) / 1_000_000;
+            Runtime runtime = Runtime.getRuntime();
+            long memoryUsed = runtime.totalMemory() - runtime.freeMemory();
+            System.out.println("Использование памяти: " + memoryUsed / (1024 * 1024)
+                    + " МБ");
             System.out.println("Время выполнения последовательной функции: " +
                     durationInMilliseconds + " миллисекунд. Результат - " + result);
 
@@ -150,6 +154,10 @@ public class Ex1 {
             result = findSumMnogopotok(testList);
             endTime = System.nanoTime();
             durationInMilliseconds = (endTime - startTime) / 1_000_000;
+            runtime = Runtime.getRuntime();
+            memoryUsed = runtime.totalMemory() - runtime.freeMemory();
+            System.out.println("Использование памяти: " + memoryUsed / (1024 * 1024)
+                    + " МБ");
             System.out.println("Время выполнения многопоточной функции: " +
                     durationInMilliseconds + " миллисекунд. Результат - " + result);
 
@@ -157,6 +165,10 @@ public class Ex1 {
             result = findSumFork(testList);
             endTime = System.nanoTime();
             durationInMilliseconds = (endTime - startTime) / 1_000_000;
+            runtime = Runtime.getRuntime();
+            memoryUsed = runtime.totalMemory() - runtime.freeMemory();
+            System.out.println("Использование памяти: " + memoryUsed / (1024 * 1024)
+                    + " МБ");
             System.out.println("Время выполнения форк функции: " +
                     durationInMilliseconds + " миллисекунд. Результат - " + result);
             System.out.println("Автор: " + "Зверев А.А. ИКБО-20-21");

@@ -9,7 +9,7 @@ public class Ex2 {
     private static CompletableFuture<Integer> calculateSquare(int number) {
         // Запуск асинхронной задачи
         return CompletableFuture.supplyAsync(() -> {
-            int delayInSeconds = ThreadLocalRandom.current().nextInt(1, 6);
+            int delayInSeconds = ThreadLocalRandom.current().nextInt(4, 6);
             try {
                 Thread.sleep(delayInSeconds * 1000);
             } catch (InterruptedException e) {
@@ -21,6 +21,7 @@ public class Ex2 {
 
     //Zverev
     public static void main(String[] args) {
+        System.out.println("Автор: " + "Зверев А.А. ИКБО-20-21");
 
         // Создаем пул потоков
         ExecutorService executorService = Executors.newFixedThreadPool(5);
@@ -50,6 +51,5 @@ public class Ex2 {
         }
 
         executorService.shutdown();
-        System.out.println("Автор: " + "Зверев А.А. ИКБО-20-21");
     }
 }
